@@ -1,3 +1,6 @@
+# Secrets
+credentials.json
+
 # Logs
 logs
 *.log
