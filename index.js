@@ -25,11 +25,7 @@ export class Services {
             credentialsPath || this.credentialsPath,
             (error, bytes) => {
                 if (error) reject(error)
-                try {
-                    resolve(JSON.parse(bytes))
-                } catch (error) {
-                    reject(error)
-                }
+                try { resolve(JSON.parse(bytes)) } catch (error) { reject(error) }
             }
         ))
     }
@@ -42,10 +38,7 @@ export class Services {
         if (!credentials) credentials = await this.credentials
         if (!credentials) throw Error('No credentials')
         const auth = new google.auth.JWT(credentials.client_email, null, credentials.private_key, scopes || this.scopes)
-        await auth.authorize()
-        .catch(error => {
-            throw error
-        })
+        await auth.authorize().catch(error => { throw error })
         return auth
     }
     /**
@@ -54,8 +47,7 @@ export class Services {
      */
     async createDriveService(auth) {
         if (!auth) auth = await this.auth
-        return google.drive({ version: 'v3', auth })
-        
+        return google.drive({ version: 'v3', auth }) 
     }
     /**
      * 
