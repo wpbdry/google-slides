@@ -1,6 +1,22 @@
 # google-slides
 ## NPM package for some simple Google Slides operations
 
+### contents
+- [prerequisites](#prerequisites)
+- [preparation](#preparation)
+- [Presentation](#presentation)
+    - [copy](#copy)
+    - [share](#share)
+    - [Presentation.replaceAllText](#presentationreplacealltext)
+- [API](#api)
+    - [copyPresentation](#copypresentation)
+    - [sharePresentation](#sharepresentation)
+    - [API.replaceAllText](#apireplacealltext)
+- [underlying services](#underlying-services)
+    - [driveService](#driveservice)
+    - [slidesService](#slidesservice)
+    - [why `await`?](#why-await)
+
 ### prerequisites
 - a Google account
 - familiarity with [Node.js](https://nodejs.org/) and [NPM](https://www.npmjs.com/)
@@ -9,13 +25,36 @@
 1. visit the [Google developers console](https://console.developers.google.com/apis/dashboard)
 2. create a new project
 3. enable the Google Drive and Google Slides APIs for your project
-3. create a service account connected to your project
-4. generate and download JSON credentials for your service account
-
-### usage
+4. create a service account connected to your project
+5. generate and download JSON credentials for your service account
+6. install
 ```shell
 npm install google-slides
 ```
+
+### Presentation
+
+#### copy
+```javascript
+import { API, Presentation } from 'google-slides'
+
+const api = new API('path/to/credentials.json')
+const presentationId = '1yMEqtOta984dwNyJoeU92tsC5x7GV2fQK7V4wJc60Mg'
+const template = new Presentation({ id: presentationId }, api)
+template.copy()
+.then(newPresentation => console.log(`New presentation created with name ${newPresentation.name} and ID ${newPresentation.id}.`))
+.catch(e => console.log('Copy error:', e))
+```
+
+#### share
+See [API.sharePresentation](#sharepresentation).
+Instead of `api.sharePresentation` use `presentation.share` and don't pass `id`.
+
+#### Presentation.replaceAllText
+See [API.replaceAllText](#apireplacealltext).
+Instead of `api` use `presentation` and don't pass `presentationId`.
+
+### API
 ```javascript
 import { API } from 'google-slides'
 
@@ -35,10 +74,10 @@ const role = 'writer'  // One of: owner | organizer | fileOrganizer | writer | c
 const type = 'user'  // One of: user | group | domain | anyone
 const sendNotificationEmails = false 
 api.sharePresentation(id, emailAddress, role, type, sendNotificationEmails)
-.then(() => console.log(`Presentation with id ${id} successfully shared with ${emailAddress}!`))
+.then(() => console.log(`Presentation with ID ${id} successfully shared with ${emailAddress}!`))
 ```
 
-#### replaceAllText
+#### API.replaceAllText
 ```javascript
 api.replaceAllText(presentationId, {
     text: '{{title}}',
@@ -87,7 +126,7 @@ import { API } from 'google-slides'
 The `slidesService` object here is equivelant to the `slides` or `this.slidesService` objects used in all the Node.js snippets in the
 [Google Slides API documentation](https://developers.google.com/slides/how-tos/presentations)
 
-#### Why `await`?
+#### why `await`?
 When `new API('path/to/credentials.json')` is called, the API logs in with the provided credentials, and initialized the underlying services.
 Since logging in happens asynchronously, the services may not yet exist by the time they are used. These services are `await`ed every time
 they are used in the [built in methods](#usage). You only need to `await` each service the first time you use it in any single promise chain.

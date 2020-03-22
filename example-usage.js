@@ -1,12 +1,13 @@
-import { API } from './index.js'
+import { API, Presentation } from './index.js'
 
 const api = new API('credentials.json')
-api.copyPresentation('1yMEqtOta984dwNyJoeU92tsC5x7GV2fQK7V4wJc60Mg')
-.then(newPres => {
-    console.log(newPres.id)
-    api.sharePresentation(newPres.id, 'william.dry@phiture.com')
+const template = new Presentation({ id: '1yMEqtOta984dwNyJoeU92tsC5x7GV2fQK7V4wJc60Mg' }, api)
+template.copy()
+.then(newPresentation => {
+    console.log(newPresentation.id)
+    newPresentation.share('william.dry@phiture.com')
     .catch(e => console.log('Share error:', e))
-    api.replaceAllText(newPres.id, {
+    newPresentation.replaceAllText({
         text: '{{Hello}}',
         replaceText: 'Whazuuuup'
     })
