@@ -37,9 +37,7 @@ class Services {
     async authorize(credentials, scopes) {
         if (!credentials) credentials = await this.credentials
         if (!credentials) throw Error('No credentials')
-        const auth = new google.auth.JWT(credentials.client_email, null, credentials.private_key, scopes || this.scopes)
-        await auth.authorize().catch(error => { throw error })
-        return auth
+        return new google.auth.JWT(credentials.client_email, null, credentials.private_key, scopes || this.scopes)
     }
     /**
      * 
@@ -165,7 +163,6 @@ export class Presentation {
 
 // NOTES:
 
-// TODO: update token if expired
 // TODO: set up proper logging / error handling
 // TODO: refactor into multiple files
 // TODO: publish on NPM
