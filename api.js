@@ -1,4 +1,5 @@
 import { Services } from './services.js'
+import { HTTPError } from './errors/api-errors.js'
 
 export class API {
     /**
@@ -18,7 +19,7 @@ export class API {
     async copyPresentation(fileId) {
         return (await this.driveService).files.copy({ fileId })
         .then(r => r.data)
-        .catch(e => { throw e.errors })
+        .catch(e => { throw new HTTPError(e) })
     }
     /**
      * 
@@ -32,7 +33,7 @@ export class API {
         const requestBody = { emailAddress, role, type, sendNotificationEmails }
         return (await this.driveService).permissions.create({ fileId, requestBody })
         .then(r => r.data)
-        .catch(e => { throw e.errors })
+        .catch(e => { throw new HTTPError(e) })
     }
     /**
      * 

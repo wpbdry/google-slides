@@ -1,6 +1,7 @@
 import { readFile } from 'fs'
 import googleapis from 'googleapis'
 const { google } = googleapis
+import { CredentialsPathRequiredError } from './errors/services-errors.js'
 
 export class Services {
     /**
@@ -8,13 +9,13 @@ export class Services {
      * @param {string} credentialsPath Path to Google service account credentials JSON file.
      */
     constructor(credentialsPath) {
-        if (!credentialsPath) return console.log('Error. No `credentialsPath` provided')
+        if (!credentialsPath) throw new CredentialsPathRequiredError
         this.scopes = ['https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/presentations']
         this.credentialsPath = credentialsPath
-        this.credentials = this.getCredentialsFromPath().catch(e => console.log(e))
-        this.auth = this.authorize().catch(e => console.log(e))
-        this.drive = this.createDriveService().catch(e => console.log(e))
-        this.slides = this.createSlidesService().catch(e => console.log(e))
+        this.credentials = this.getCredentialsFromPath().catch(e => { throw e })
+        this.auth = this.authorize().catch(e => { throw e })
+        this.drive = this.createDriveService().catch(e => { throw e })
+        this.slides = this.createSlidesService().catch(e => { throw e })
     }
     /**
      * 
@@ -36,7 +37,6 @@ export class Services {
      */
     async authorize(credentials, scopes) {
         if (!credentials) credentials = await this.credentials
-        if (!credentials) throw Error('No credentials')
         return new google.auth.JWT(credentials.client_email, null, credentials.private_key, scopes || this.scopes)
     }
     /**
