@@ -4,6 +4,7 @@
 ### contents
 - [prerequisites](#prerequisites)
 - [preparation](#preparation)
+- [installation](#installation)
 - [Presentation](#presentation)
     - [copy](#copy)
     - [share](#share)
@@ -27,7 +28,8 @@
 3. enable the Google Drive and Google Slides APIs for your project
 4. create a service account connected to your project
 5. generate and download JSON credentials for your service account
-6. install
+
+### installation
 ```shell
 npm install google-slides
 ```
