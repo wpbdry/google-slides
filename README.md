@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/wpbdry/google-slides.svg?branch=main)](https://travis-ci.org/wpbdry/google-slides)
+
 # google-slides
 ## NPM package for some simple Google Slides operations
 
