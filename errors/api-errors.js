@@ -1,4 +1,4 @@
-import BaseError from './base-errors.js'
+import BaseError, { ObjectRequiredError } from './base-errors.js'
 import Gaxios from 'gaxios'
 
 export class HTTPError extends BaseError {
@@ -18,5 +18,41 @@ export class HTTPError extends BaseError {
         }
         // if unexpected format
         this.error = error
+    }
+}
+
+class TextReplacementError extends ObjectRequiredError {
+    /**
+     * 
+     * @param {{}}     propertiesPassed The properties passed to the TextReplacement constructor.
+     * @param {string} missingKey The name of the key missing in `propertiesPassed`
+     */
+    constructor(propertiesPassed, missingKey) {
+        super(
+            missingKey,
+            'create TextReplacement',
+            'Use `new TextReplacement({ text: \'example text\', replaceText: \'example replacement text\' })`'
+        )
+        this.propertiesPassed = propertiesPassed
+    }
+}
+
+export class TextRequiredError extends TextReplacementError {
+    /**
+     * 
+     * @param {{}} propertiesPassed The properties passed to the TextReplacement constructor.
+     */
+    constructor(propertiesPassed) {
+        super(propertiesPassed, 'text')
+    }
+}
+
+export class ReplaceTextRequiredError extends TextReplacementError {
+    /**
+     * 
+     * @param {{}} propertiesPassed The properties passed to the TextReplacement constructor.
+     */
+    constructor(propertiesPassed) {
+        super(propertiesPassed, 'replaceText')
     }
 }

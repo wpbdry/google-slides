@@ -1,5 +1,5 @@
 import { Services } from './services.js'
-import { HTTPError } from './errors/api-errors.js'
+import { HTTPError, TextRequiredError, ReplaceTextRequiredError } from './errors/api-errors.js'
 
 export class API {
     /**
@@ -41,11 +41,10 @@ export class API {
      * @param {{ text: string, replaceText: string, matchCase: string: true }} | [] textReplacements The text to replace.
      */
     async replaceAllText(presentationId, textReplacements) {
-        if (!Array.isArray(textReplacements)) textReplacements = [textReplacements]
+        if (!Array.isArray(textReplacements)) textReplacements = [ textReplacements ]
         const requests = []
-        for (const textReplacement of textReplacements) {
-            if (!textReplacement.text) throw `\`textReplacement\` object ${JSON.stringify(textReplacement)} does not contain a \`text\` property`
-            if (!textReplacement.replaceText) throw `\`textReplacement\` object ${JSON.stringify(textReplacement)} does not contain a \`replaceText\` property`
+        for (let textReplacement of textReplacements) {
+            if (!(textReplacement instanceof TextReplacement)) textReplacement = new TextReplacement(textReplacement)
             requests.push({ replaceAllText: {
                 containsText: {
                     text: textReplacement.text,
@@ -56,6 +55,17 @@ export class API {
         }
         return (await this.slidesService).presentations.batchUpdate({ presentationId, resource: { requests } })
         .then(() => {})
-        .catch(e => { throw e.errors })
+    }
+}
+
+class TextReplacement {
+    /**
+     * 
+     * @param {{ text: string, replaceText: string, matchCase: true }} properties The text to replace.
+     */
+    constructor(properties) {
+        if (!properties.text) throw new TextRequiredError(properties)
+        if (!properties.replaceText) throw new ReplaceTextRequiredError(properties)
+        for (const key in properties) this[key] = properties[key]
     }
 }

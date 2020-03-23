@@ -12,14 +12,16 @@ export default class BaseError extends Error {
 export class ObjectRequiredError extends BaseError {
     /**
      * 
-     * @param {string} object The name of the required object.
-     * @param {string} action The action (imperative) that cannot be performed without this object.
-     * @param {string} tip    Instructions on how to resolve this error.
+     * @param {string} objectName   The name of the required object.
+     * @param {string} action       The action (imperative) that cannot be performed without this object.
+     * @param {string} tip          Instructions on how to resolve this error.
+     * @param {*}      parentObject The parent of the missing object, if applicable.
      */
-    constructor(object, action, tip = '') {
-        super(`Object \`${object}\` is required to ${action}. ${tip}`)
-        this.object = object
+    constructor(objectName, action, tip = '', parentObject = undefined) {
+        super(`Object \`${objectName}\` is required to ${action}. ${tip}`)
+        this.objectName = objectName
         this.action = action
         this.tip = tip
+        this.parentObject = parentObject
     }
 }

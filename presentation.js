@@ -1,15 +1,17 @@
+import { PresentationIDRequiredError, PresentationAPIRequiredError } from './errors/presentation-errors.js'
+
 export class Presentation {
     /**
      * 
-     * @param {{}}  properties The properties of the presentation.
-     * @param {API} The API instance that should be used to interact with this Presentation.
+     * @param {{ id: string }}  properties The properties of the presentation.
+     * @param {API} The API     instance that should be used to interact with this Presentation.
      */
     constructor(properties, api) {
-        if (!properties.id) throw 'Presentation must be initialized with an `id`'
+        if (!properties.id) throw new PresentationIDRequiredError(properties)
         for (const key in properties) this[key] = properties[key]
         this.api = api
     }
-    checkAPIExists() { if (!this.api) throw 'This presentation does not have an associated API. Use `presentation.api = api`' }
+    checkAPIExists() { if (!this.api) throw new PresentationAPIRequiredError }
     /**
      * 
      * @param {API} api The API instance that should be used to interact with the new Presentation.
@@ -18,7 +20,6 @@ export class Presentation {
         this.checkAPIExists()
         return this.api.copyPresentation(this.id, ...args)
         .then(newPres =>  new Presentation(newPres, api))
-        .catch(e => { throw e })
     }
     /**
      * 
@@ -30,7 +31,6 @@ export class Presentation {
     async share(...args) {
         this.checkAPIExists()
         return this.api.sharePresentation(this.id, ...args)
-        .catch(e => { throw e })
     }
     /**
      * 
@@ -39,6 +39,5 @@ export class Presentation {
     async replaceAllText(...args) {
         this.checkAPIExists()
         return this.api.replaceAllText(this.id, ...args)
-        .catch(e => { throw e })
     }
 }
