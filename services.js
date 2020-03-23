@@ -12,10 +12,10 @@ export class Services {
         if (!credentialsPath) throw new CredentialsPathRequiredError
         this.scopes = ['https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/presentations']
         this.credentialsPath = credentialsPath
-        this.credentials = this.getCredentialsFromPath().catch(e => { throw e })
-        this.auth = this.authorize().catch(e => { throw e })
-        this.drive = this.createDriveService().catch(e => { throw e })
-        this.slides = this.createSlidesService().catch(e => { throw e })
+        this.credentials = this.getCredentialsFromPath()
+        this.auth = this.authorize()
+        this.drive = this.createDriveService()
+        this.slides = this.createSlidesService()
     }
     /**
      * 
