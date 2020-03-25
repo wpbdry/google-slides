@@ -4,8 +4,12 @@
   "description": "NPM package for some simple Google Slides operations",
   "type": "module",
   "main": "index.js",
+  "directories": {
+    "example": "example-usage",
+    "test": "test"
+  },
   "scripts": {
-    "start": "node example-usage.js",
+    "start": "node example-usage",
     "test": "mocha --reporter spec"
   },
   "repository": {
