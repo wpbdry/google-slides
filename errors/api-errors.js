@@ -46,3 +46,27 @@ export class ReplaceTextRequiredError extends TextReplacementError {
         super('replaceText')
     }
 }
+
+class ShapeReplacementWithImageError extends ObjectRequiredError {
+    /**
+     * 
+     * @param {string} missingParam The name of the missing parameter.
+     */
+    constructor(missingParam) {
+        super(
+            missingParam,
+            'create ShapeReplacementWithImage',
+            'Use `new ShapeReplacementWithImage(\'example text\', \'example image URL\')`'
+        )
+    }
+}
+
+export class ObjectReplacementTextRequiredError extends ShapeReplacementWithImageError {
+    constructor() {
+        super('text')
+    }
+}
+
+export class ImageURLRequiredError extends ShapeReplacementWithImageError {
+    constructor() { super('imageUrl') }
+}

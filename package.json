@@ -1,6 +1,6 @@
 {
   "name": "google-slides",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "NPM package for some simple Google Slides operations",
   "type": "module",
   "main": "index.js",

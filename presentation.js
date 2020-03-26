@@ -33,12 +33,7 @@ export class Presentation {
         this.checkAPIExists()
         return this.api.sharePresentation(this.id, ...args)
     }
-    /**
-     * 
-     * @param {{ text: string, replaceText: string, matchCase: string: true }} | [] textReplacements The text to replace.
-     */
-    async replaceAllText(...args) {
-        this.checkAPIExists()
-        return this.api.replaceAllText(this.id, ...args)
+    async batchUpdate(updates) {
+        this.api.presentationBatchUpdate(this.id, updates)
     }
 }
