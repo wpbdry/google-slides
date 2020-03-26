@@ -11,6 +11,7 @@ export class Presentation {
         for (const key in properties) this[key] = properties[key]
         this.api = api
     }
+    get url() { return `https://docs.google.com/presentation/d/${this.id}/edit` }
     checkAPIExists() { if (!this.api) throw new PresentationAPIRequiredError }
     /**
      * 
