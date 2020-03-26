@@ -62,7 +62,7 @@ export class TextReplacement {
             replaceAllText: {
                 containsText: {
                     text,
-                    matchCase: matchCase || true
+                    matchCase
                 },
                 replaceText: replaceText
             }
@@ -78,16 +78,16 @@ export class ShapeReplacementWithImage {
      * @param {boolean} matchCase 
      * @param {string} replaceMethod 
      */
-    constructor(text, imageUrl, matchCase, replaceMethod) {
+    constructor(text, imageUrl, matchCase = true, replaceMethod = 'CENTER_INSIDE') {
         if (!text) throw new ObjectReplacementTextRequiredError
         if (!imageUrl) throw new ImageURLRequiredError
         this.request = {
             replaceAllShapesWithImage: {
                 imageUrl,
-                replaceMethod: replaceMethod || 'CENTER_INSIDE',
+                replaceMethod,
                 containsText: {
                     text,
-                    matchCase: matchCase || true
+                    matchCase
                 }
             }
         }
