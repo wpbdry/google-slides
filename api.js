@@ -44,7 +44,7 @@ export class API {
         if (!Array.isArray(textReplacements)) textReplacements = [ textReplacements ]
         const requests = []
         for (let textReplacement of textReplacements) {
-            if (!(textReplacement instanceof TextReplacement)) textReplacement = new TextReplacement(textReplacement)
+            if (!(textReplacement instanceof TextReplacement)) textReplacement = new TextReplacement(textReplacement.text, textReplacement.replaceText, textReplacement.matchCase)
             requests.push({ replaceAllText: {
                 containsText: {
                     text: textReplacement.text,
@@ -58,14 +58,18 @@ export class API {
     }
 }
 
-class TextReplacement {
+export class TextReplacement {
     /**
      * 
-     * @param {{ text: string, replaceText: string, matchCase: true }} properties The text to replace.
+     * @param {string}  text        The text to replace.
+     * @param {string}  replaceText The replacement text.
+     * @param {boolean} matchCase   Whether `text` must match case exactly.
      */
-    constructor(properties) {
-        if (!properties.text) throw new TextRequiredError(properties)
-        if (!properties.replaceText) throw new ReplaceTextRequiredError(properties)
-        for (const key in properties) this[key] = properties[key]
+    constructor(text, replaceText, matchCase = true) {
+        if (!text) throw new TextRequiredError
+        if (!replaceText) throw new ReplaceTextRequiredError
+        this.text = text,
+        this.replaceText = replaceText,
+        this.matchCase = matchCase
     }
 }

@@ -24,35 +24,25 @@ export class HTTPError extends BaseError {
 class TextReplacementError extends ObjectRequiredError {
     /**
      * 
-     * @param {{}}     propertiesPassed The properties passed to the TextReplacement constructor.
-     * @param {string} missingKey The name of the key missing in `propertiesPassed`
+     * @param {string} missingParam The name of the missing parameter.
      */
-    constructor(propertiesPassed, missingKey) {
+    constructor(missingParam) {
         super(
-            missingKey,
+            missingParam,
             'create TextReplacement',
-            'Use `new TextReplacement({ text: \'example text\', replaceText: \'example replacement text\' })`'
+            'Use `new TextReplacement(\'example text\', \'example replacement text\')`'
         )
-        this.propertiesPassed = propertiesPassed
     }
 }
 
 export class TextRequiredError extends TextReplacementError {
-    /**
-     * 
-     * @param {{}} propertiesPassed The properties passed to the TextReplacement constructor.
-     */
-    constructor(propertiesPassed) {
-        super(propertiesPassed, 'text')
+    constructor() {
+        super('text')
     }
 }
 
 export class ReplaceTextRequiredError extends TextReplacementError {
-    /**
-     * 
-     * @param {{}} propertiesPassed The properties passed to the TextReplacement constructor.
-     */
-    constructor(propertiesPassed) {
-        super(propertiesPassed, 'replaceText')
+    constructor() {
+        super('replaceText')
     }
 }

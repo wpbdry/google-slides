@@ -15,6 +15,7 @@
     - [copyPresentation](#copypresentation)
     - [sharePresentation](#sharepresentation)
     - [API.replaceAllText](#apireplacealltext)
+- [TextReplacement](#textreplacement)
 - [underlying services](#underlying-services)
     - [driveService](#driveservice)
     - [slidesService](#slidesservice)
@@ -99,6 +100,18 @@ api.replaceAllText(presentationId, [{
     text: 'bandana',
     replaceText: 'shawl'
 }])
+.catch(error => doSomething(error))
+```
+
+### TextReplacement
+```javascript
+import { API, TextReplacement } from 'google-slides'
+
+const api = new API('path/to/credentials.json')
+api.replaceAllText(presentationId, [
+    new TextReplacement('Cape', 'Cape Town', true),
+    new TextReplacement('bandana', 'shawl')
+])
 .catch(error => doSomething(error))
 ```
 

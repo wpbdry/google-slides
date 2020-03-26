@@ -1,2 +1,2 @@
-export { API } from './api.js'
+export { API, TextReplacement } from './api.js'
 export { Presentation } from './presentation.js'
