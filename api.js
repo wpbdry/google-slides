@@ -29,9 +29,9 @@ export class API {
      * @param {string} type                   user | group | domain | anyone
      * @param {string} sendNotificationEmails Whether to send a notification email when sharing to users or groups.
      */
-    async sharePresentation(fileId, emailAddress, role = 'writer', type = 'user', sendNotificationEmails = false) {
-        const requestBody = { emailAddress, role, type, sendNotificationEmails }
-        return (await this.driveService).permissions.create({ fileId, requestBody })
+    async sharePresentation(fileId, emailAddress, role = 'writer', type = 'user', sendNotificationEmail = false) {
+        const requestBody = { emailAddress, role, type }
+        return (await this.driveService).permissions.create({ fileId, sendNotificationEmail, requestBody })
         .then(r => r.data)
         .catch(e => { throw new HTTPError(e) })
     }
