@@ -1,5 +1,5 @@
 import { Services } from './services.js'
-import { HTTPError, TextRequiredError, ReplaceTextRequiredError } from './errors/api-errors.js'
+import { HTTPError, TextRequiredError, ReplaceTextRequiredError, ObjectReplacementTextRequiredError, ImageURLRequiredError } from './errors/api-errors.js'
 
 export class API {
     /**
@@ -37,22 +37,12 @@ export class API {
     }
     /**
      * 
-     * @param {string}                                                              presentationId   The ID of the presentation.
-     * @param {{ text: string, replaceText: string, matchCase: string: true }} | [] textReplacements The text to replace.
+     * @param {string}                                      presentationId The ID of the presentation.
+     * @param {TextReplacement | ShapeReplacementWithImage} updates        A list of updates.
      */
-    async replaceAllText(presentationId, textReplacements) {
-        if (!Array.isArray(textReplacements)) textReplacements = [ textReplacements ]
-        const requests = []
-        for (let textReplacement of textReplacements) {
-            if (!(textReplacement instanceof TextReplacement)) textReplacement = new TextReplacement(textReplacement.text, textReplacement.replaceText, textReplacement.matchCase)
-            requests.push({ replaceAllText: {
-                containsText: {
-                    text: textReplacement.text,
-                    matchCase: textReplacement.matchCase !== undefined ? textReplacement.matchCase : true
-                },
-                replaceText: textReplacement.replaceText
-            } })
-        }
+    async presentationBatchUpdate(presentationId, updates) {
+        if (!Array.isArray(updates)) updates = [ updates ]
+        const requests = updates.map(update => update.request)
         return (await this.slidesService).presentations.batchUpdate({ presentationId, resource: { requests } })
         .then(() => {})
     }
@@ -68,8 +58,38 @@ export class TextReplacement {
     constructor(text, replaceText, matchCase = true) {
         if (!text) throw new TextRequiredError
         if (!replaceText) throw new ReplaceTextRequiredError
-        this.text = text,
-        this.replaceText = replaceText,
-        this.matchCase = matchCase
+        this.request = {
+            replaceAllText: {
+                containsText: {
+                    text,
+                    matchCase
+                },
+                replaceText: replaceText
+            }
+        }
+    }
+}
+
+export class ShapeReplacementWithImage {
+    /**
+     * 
+     * @param {string} text 
+     * @param {string} imageUrl 
+     * @param {boolean} matchCase 
+     * @param {string} replaceMethod 
+     */
+    constructor(text, imageUrl, matchCase = true, replaceMethod = 'CENTER_INSIDE') {
+        if (!text) throw new ObjectReplacementTextRequiredError
+        if (!imageUrl) throw new ImageURLRequiredError
+        this.request = {
+            replaceAllShapesWithImage: {
+                imageUrl,
+                replaceMethod,
+                containsText: {
+                    text,
+                    matchCase
+                }
+            }
+        }
     }
 }

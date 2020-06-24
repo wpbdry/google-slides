@@ -35,10 +35,9 @@ export class Presentation {
     }
     /**
      * 
-     * @param {{ text: string, replaceText: string, matchCase: string: true }} | [] textReplacements The text to replace.
+     * @param {TextReplacement | ShapeReplacementWithImage} updates A list of updates.
      */
-    async replaceAllText(...args) {
-        this.checkAPIExists()
-        return this.api.replaceAllText(this.id, ...args)
+    async batchUpdate(updates) {
+        this.api.presentationBatchUpdate(this.id, updates)
     }
 }
