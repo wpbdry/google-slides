@@ -10,12 +10,13 @@
 - [Presentation](#presentation)
     - [copy](#copy)
     - [share](#share)
-    - [Presentation.replaceAllText](#presentationreplacealltext)
+    - [batchUpdate](#batchupdate)
 - [API](#api)
     - [copyPresentation](#copypresentation)
     - [sharePresentation](#sharepresentation)
-    - [API.replaceAllText](#apireplacealltext)
-- [TextReplacement](#textreplacement)
+    - [presentationBatchUpdate](#presentationbatchupdate)
+        - [TextReplacement](#textreplacement)
+        - [ShapeReplacementWithImage](#shapereplacementwithimage)
 - [underlying services](#underlying-services)
     - [driveService](#driveservice)
     - [slidesService](#slidesservice)
@@ -55,8 +56,8 @@ template.copy()
 See [API.sharePresentation](#sharepresentation).
 Instead of `api.sharePresentation` use `presentation.share` and don't pass `id`.
 
-#### Presentation.replaceAllText
-See [API.replaceAllText](#apireplacealltext).
+#### batchUpdate
+See [API.presentationBatchUpdate](#presentationbatchupdate).
 Instead of `api` use `presentation` and don't pass `presentationId`.
 
 ### API
@@ -82,37 +83,36 @@ api.sharePresentation(id, emailAddress, role, type, sendNotificationEmails)
 .then(() => console.log(`Presentation with ID ${id} successfully shared with ${emailAddress}!`))
 ```
 
-#### API.replaceAllText
+#### presentationBatchUpdate
 ```javascript
-api.replaceAllText(presentationId, {
-    text: '{{title}}',
-    replaceText: 'My Presentation'
-})
-.catch(error => doSomething(error))
-```
-or
-```javascript
-api.replaceAllText(presentationId, [{
-    text: 'Cape',
-    replaceText: 'Cape Town'
-    matchCase: true
-}, {
-    text: 'bandana',
-    replaceText: 'shawl'
-}])
-.catch(error => doSomething(error))
-```
-
-### TextReplacement
-```javascript
-import { API, TextReplacement } from 'google-slides'
+import { API, TextReplacement, ShapeReplacementWithImage } from 'google-slides'
 
 const api = new API('path/to/credentials.json')
-api.replaceAllText(presentationId, [
-    new TextReplacement('Cape', 'Cape Town', true),
-    new TextReplacement('bandana', 'shawl')
+
+api.presentationBatchUpdate(presentationId, [
+    new TextReplacement('{{client-name}}', 'My Client'),
+    new ShapeReplacementWithImage('{{client-logo}}', logoUrl)
 ])
 .catch(error => doSomething(error))
+```
+
+##### TextReplacement
+Replaces all instances of text matching a criterion with `replaceText`. \
+```javascript
+const text = '{{some-text-to-replace}}'
+const replaceText = 'Replacement Text'
+const matchCase = true  // default
+const textReplacement = new TextReplacement(text, replaceText, matchCase)
+```
+
+##### ShapeReplacementWithImage
+Replaces all shapes that match the given criteria with the provided image.
+```javascript
+const text = '{{text-contained-within-shape}}'
+const imageUrl = 'https://example.com/my-img'
+const matchCase = true  // default
+const replaceMethod = 'CENTER_INSIDE'  // default
+const shapeReplacement = new ShapeReplacementWithImage(text, imageUrl, matchCase, replaceMethod)
 ```
 
 ### underlying services
